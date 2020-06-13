@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.BackDao">
+    <insert id="addBack">
+        insert into back values (backid,#{chid},#{loan},#{loanback},#{backmonth},#{backtime},backstate);
+    </insert>
+    <update id="updateBackState">
+        update back set backstate = #{backstate} where backid=#{backid};
+    </update>
+    <select id="queryBackByChid" resultType="wallet.bean.Back">
+        select * from back where chid=#{chid};
+    </select>
+    <select id="queryBackByID" resultType="wallet.bean.Back">
+        select * from back where backid=#{backid};
+    </select>
+    <select id="queryBackByState" resultType="wallet.bean.Back">
+        select * from back where backstate=#{backstate};
+    </select>
+    <select id="queryBackByTime" resultType="wallet.bean.Back">
+        select * from back where backtime &lt;= #{backtime} and backstate=0;
+    </select>
+</mapper>

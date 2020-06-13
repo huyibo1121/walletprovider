@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.OverdueDao">
+    <insert id="addOverdue">
+        insert into overdue values (overdueid,#{backid},#{uid},#{overduemoney},#{overduetime},#{overdueinterst},#{nextmoney});
+    </insert>
+    <update id="updateOverdue">
+        update overdue set overduemoney = #{overduemoney},overduetime=#{overduetime},overdueinterst=#{overdueinterst},nextmoney=#{nextmoney} where overdueid=#{overdueid} ;
+    </update>
+    <delete id="deleteOverdue">
+        delete from overdue where overdueid=#{overdueid}
+    </delete>
+    <select id="queryOverdueByID" resultType="wallet.bean.Overdue">
+        select * from overdue where overdueid=#{overdueid};
+    </select>
+    <select id="queryByBack" resultType="wallet.bean.Overdue">
+        select * from overdue where backid=#{backid};
+    </select>
+</mapper>

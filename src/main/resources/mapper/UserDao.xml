@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.UserDao">
+    <resultMap id="myuser" type="wallet.bean.User">
+        <id column="uid" property="uid"/>
+        <result column="phone" property="phone"/>
+        <result column="uname" property="uname"/>
+        <result column="paypwd" property="paypwd"/>
+        <result column="ustate" property="ustate"/>
+        <result column="score" property="score"/>
+        <result column="logpwd" property="logpwd"/>
+        <result column="assets" property="assets"/>
+        <result column="head" property="head"/>
+        <result column="retain" property="retain"/>
+        <result column="regtime" property="regtime"/>
+        <result column="lasttime" property="lasttime"/>
+        <result column="sex" property="sex"></result>
+        <association property="bank" javaType="wallet.bean.Bank">
+            <id column="bankid" property="bankid"/>
+            <result column="uid" property="uid"/>
+        </association>
+        <association property="realname" javaType="wallet.bean.Realname">
+            <id column="uid" property="uid"/>
+            <result column="idname" property="idname"/>
+            <result column="idcard" property="idcard"/>
+            <result column="obverse" property="obverse"/>
+            <result column="reverse" property="reverse"/>
+        </association>
+    </resultMap>
+
+    <select id="queryAllUser" resultMap="myuser">
+        select * from user u,realname,bank where
+        u.uid=realname.uid and
+        u.uid=bank.uid
+    </select>
+    <select id="queryAllUsers" resultMap="myuser">
+    select * from user
+    </select>
+    <select id="queryUserByIdName" resultMap="myuser">
+        select * from user u,realname r,bank b
+         where u.uid=r.uid and u.uid = b.uid and idname like '%${idname}%';
+    </select>
+
+    <select id="queryUserDetailByid" resultMap="myuser">
+        select * from user u,realname r,bank b
+         where u.uid=r.uid and u.uid = b.uid and u.uid=#{uid}
+    </select>
+
+    <update id="updateUstate">
+        update user set ustate=#{ustate} where uid=#{uid}
+    </update>
+
+    <update id="updateUserAssets">
+        update user set assets=#{assets} where uid=#{uid}
+    </update>
+
+
+
+    <select id="queryAssetsById" resultType="wallet.bean.User">
+        select assets from user where uid=#{uid}
+    </select>
+
+    <select id="countqueryassetsById" resultType="int">
+        SELECT COUNT(1) from user
+    </select>
+
+    <!--注册-->
+    <insert id="addUser">
+        insert into user(phone,uname,logpwd,uid,privateKey,publicKey,sex) values (#{phone},#{uname},#{logpwd},uid,#{privateKey},#{publicKey},#{sex})
+    </insert>
+
+    <select id="queryUserByPhone" resultType="wallet.bean.User">
+        select * from  user where phone=#{phone}
+    </select>
+
+    <!--修改用户手机号-->
+    <update id="updatePhoneById">
+        update user set phone=#{phone} where uid=#{uid}
+    </update>
+    
+    <!--修改用户密码-->
+    <update id="updateLogpwdBLogpwd">
+        update user set logpwd=#{logpwd} where uid=#{uid}
+    </update>
+
+    <!--忘记密码-->
+    <update id="updateLogpwdByPhone">
+        update user set logpwd=#{logpwd} where uid=#{uid}
+    </update>
+
+    <!--修改支付密码-->
+    <update id="updatePaypwdByphone">
+        update user set paypwd=#{paypwd} where uid=#{uid}
+    </update>
+
+    <!--修改用户头像-->
+    <update id="updateUserHead">
+        update user set head=#{head} where uid=#{uid}
+    </update>
+    <select id="queryAllByUid" resultType="wallet.bean.User">
+        select * from  user where uid=#{uid}
+    </select>
+
+    <!--用户实名认证，根据id查询头像 昵称 性别 身份证号-->
+    <select id="queryUserByid" resultMap="myuser">
+        select u.head,u.uname,u.sex,r.idcard from user u,realname r where u.uid=r.uid
+        and u.uid=#{uid}
+    </select>
+</mapper>

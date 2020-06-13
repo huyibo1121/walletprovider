@@ -1,0 +1,31 @@
+server:
+  port: 8001
+  max-http-header-size: 1048576
+  tomcat:
+    max-http-post-size: 1048576
+
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/wallet?serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+  application:
+    name: walletprovider
+  redis:
+    port: 6379
+    password: 123456
+    database: 0
+    host: 127.0.0.1
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 100
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+eureka:
+  client:
+    service-url: dafaultZone=http://localhost:8080/eureka

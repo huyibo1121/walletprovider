@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.BillDao">
+    <insert id="addBill">
+        insert into bill values (billid,#{uid},#{billtype},#{detailed},
+        #{nowmoney},#{billtime},#{creid},#{finid},#{bankid},#{retain});
+    </insert>
+    <insert id="addBill1">
+        insert into bill values (billid,#{uid},#{billtype},#{detailed},
+        #{nowmoney},#{billtime},#{creid},#{finid},#{bankid},#{retain});
+    </insert>
+
+    <resultMap id="myBill" type="wallet.bean.Bill">
+        <id column="billid" property="billid"></id>
+        <result property="uid" column="uid"></result>
+        <result property="billtype" column="billtype"></result>
+        <result property="detailed" column="detailed"></result>
+        <result property="nowmoney" column="nowmoney"></result>
+        <result property="billtime" column="billtime"></result>
+        <result property="crdid" column="crdid"></result>
+        <result property="finid" column="finid"></result>
+        <result property="bankid" column="bankid"></result>
+        <result property="retain" column="retain"></result>
+        <association property="billtype1" javaType="wallet.bean.Billtype">
+            <id property="btid" column="btid"></id>
+            <result column="btname" property="btname"></result>
+        </association>
+        <association property="finance" javaType="wallet.bean.Finance">
+            <id property="finid" column="finid"></id>
+            <result property="finname" column="finname"></result>
+        </association>
+        <association property="credit" javaType="wallet.bean.Credit">
+            <id property="creid" column="creid"></id>
+            <result property="crename" column="crename"></result>
+        </association>
+    </resultMap>
+
+    <select id="queryByIdBill" resultType="wallet.bean.Bill">
+        SELECT * from bill where uid =#{uid} limit #{pageon},1
+    </select>
+
+    <select id="countqueryByIdBill" resultType="int">
+        SELECT COUNT(1) from bill where uid = #{uid}
+    </select>
+
+
+    <select id="querynowmoneybill" resultType="wallet.bean.Bill">
+        SELECT * FROM bill WHERE uid = #{uid} AND billtype = #{billtype} AND billtime >= #{startdate} AND	billtime &lt; #{enddate} ORDER BY billtime DESC
+    </select>
+
+    <!--查询账单（理财记录，还款记录，贷款记录）-->
+    <select id="queryBillByUidAndStartEnd" resultType="wallet.bean.Bill">
+    select * from bill
+        <where>
+            uid = #{uid}
+        <if test="billtype!=null and billtype!='' ">
+            and billtype = #{billtype}
+        </if>
+        <if test="starttime!=null and starttime!='' ">
+            and billtime &gt;= #{starttime}
+        </if>
+        <if test="endtime!=null and endtime!='' ">
+            and billtime &lt;= #{endtime}
+        </if>
+        </where>
+    </select>
+
+
+
+    <!--    <select id="queryBillByUidAndStartEnd" resultType="wallet.bean.Bill">-->
+<!--        select * from-->
+<!--        <where>-->
+<!--            uid=#{uid}-->
+<!--            <if test="billtype==null and billtype==''">-->
+<!--                and billtime &lt; #{endtime} and billtime &gt; #{starttime}-->
+<!--            </if>>-->
+<!--            <if test="starttime==null and starttime==''">-->
+<!--                and billtype=#{billtype}  and billtime &lt; #{endtime}-->
+<!--            </if>-->
+<!--            <if test="endtime==null and endtime==''">-->
+<!--                and billtype=#{billtype} and billtime &gt; #{starttime}-->
+<!--            </if>-->
+<!--            <if test="starttime==null and starttime=''and endtime==null and endtime=''">-->
+<!--                and billtype=#{billtype}-->
+<!--            </if>-->
+<!--            <if test="starttime==null and starttime==''and billtype==null and billtype==''">-->
+<!--                and billtime &lt; #{endtime}-->
+<!--            </if>-->
+<!--            <if test="endtime==null and endtime='' and  billtype==null and billtype==''">-->
+<!--                and billtime &gt; #{starttime}-->
+<!--            </if>-->
+<!--            <if test="billtype!=null and billtype!='' and starttime!=null and starttime!=''and endtime!=null and endtime!=''">-->
+<!--                and billtype=#{billtype}  and billtime &lt; #{endtime} and billtime &gt; #{starttime}-->
+<!--            </if>-->
+<!--    </where>-->
+<!--        limit #{pageon},4-->
+<!--    </select>-->
+</mapper>

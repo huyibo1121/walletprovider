@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.CreditHistoryDao">
+
+    <resultMap id="mycredit" type="wallet.bean.CreditHistory">
+        <id column="chid" property="chid"></id>
+        <result column="creid" property="creid"></result>
+        <result column="crid" property="crid"></result>
+        <result column="uid" property="uid"></result>
+        <result column="starttime" property="starttime"></result>
+        <result column="cremoney" property="cremoney"></result>
+        <result column="cycle" property="cycle"></result>
+        <result column="repaymethod" property="repaymethod"></result>
+        <result column="chstate" property="chstate"></result>
+        <result column="payoff" property="payoff"></result>
+        <association property="credit" javaType="wallet.bean.Credit">
+            <id column="creid" property="creid"></id>
+            <result column="crename" property="crename"></result>
+            <result column="synopsis" property="synopsis"></result>
+            <result column="business" property="business"></result>
+            <result column="releasetime" property="releasetime"></result>
+            <result column="repaytype" property="repaytype"></result>
+            <result column="maxcycle" property="maxcycle"></result>
+            <result column="retain" property="retain"></result>
+            <result column="photo" property="photo"></result>
+            <result column="slogan" property="slogan"></result>
+            <result column="state" property="state"></result>
+            <result column="retain" property="retain"></result>
+            <collection property="creditRatesList" ofType="wallet.bean.CreditRates" javaType="java.util.List">
+                <id column="creid" property="creid"></id>
+                <result column="rate" property="rate"></result>
+            </collection>
+        </association>
+    </resultMap>
+
+    <select id="queryLoanHistoryByid" resultMap="mycredit">
+        select * from credit cre,credit_history ch,credit_rates cr WHERE cre.creid = ch.creid AND cr.crid = ch.crid
+        AND cr.creid = cre.creid AND ch.uid = #{uid}
+    </select>
+
+    <insert id="addCreditHistory" useGeneratedKeys="true" keyProperty="chid" parameterType="wallet.bean.CreditHistory">
+        insert into credit_history values (chid,#{creid},#{uid},#{starttime},
+                                           #{cremoney},#{cycle},#{repaymethod},#{payoff}
+                                           ,#{crid},chstate
+        )
+    </insert>
+
+    <select id="queryConutOfCreditHistory" resultType="int">
+        SELECT COUNT(chid) from credit_history
+    </select>
+
+    <select id="queryCreditHistoryById" resultType="wallet.bean.CreditHistory">
+        select * from  credit_history where chid=#{chid}
+    </select>
+</mapper>

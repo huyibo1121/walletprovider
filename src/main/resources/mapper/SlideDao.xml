@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.SlideDao">
+    <select id="queryAllSlide" resultType="wallet.bean.Slide">
+        select * from slide
+    </select>
+
+    <select id="querySlideByid" resultType="wallet.bean.Slide">
+        select * from slide where slideid=#{slideid}
+    </select>
+
+    <update id="updateSlide">
+        update slide set photo=#{photo},address=#{address} where slideid=#{slideid}
+    </update>
+</mapper>

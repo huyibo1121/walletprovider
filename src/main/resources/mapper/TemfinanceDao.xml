@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.TemfinanceDao">
+    <insert id="addTemfinance">
+        insert into tem_finance values (#{tid},#{uid},#{finid},#{money},#{ftime},state)
+    </insert>
+
+    <delete id="deleteTemfinanceById">
+        delete from tem_finance where tid=#{tid}
+    </delete>
+
+    <delete id="deleteTmfinanceByFtime">
+        delete from tem_finance where ftime &lt; #{ftime}
+    </delete>
+
+    <select id="queryTemfinanceById" resultType="wallet.bean.Temfinance">
+        select * from tem_finance where tid=#{tid}
+    </select>
+</mapper>

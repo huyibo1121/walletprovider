@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.FinancerateDao">
+    <select id="queryAllFinance" resultType="wallet.bean.FinanceRates">
+        select * from finance_rates
+        <if test="limit!=null and limit!=''">
+            order by ratetime desc limit #{limit}
+        </if>
+
+    </select>
+
+    <select id="queryFinRatesRate" resultType="BigDecimal">
+        SELECT rate FROM finance_rates WHERE ratetime=#{ratetime} ORDER BY ratetime DESC
+    </select>
+
+    <select id="queryAllOfFinanceRates" resultType="wallet.bean.FinanceRates">
+        select * from finance_rates order by ratetime desc limit 4
+    </select>
+</mapper>

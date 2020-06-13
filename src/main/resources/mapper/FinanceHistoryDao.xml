@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.FinanceHistoryDao">
+    <resultMap id="FinanceHistory" type="wallet.bean.FinanceHistory">
+        <id column="fhid" property="fhid"></id>
+        <result column="finid" property="finid"></result>
+        <result column="uid" property="uid"></result>
+        <result column="dealtime" property="dealtime"></result>
+        <result column="dealmoney" property="dealmoney"></result>
+        <result column="dealstate" property="dealstate"></result>
+        <result column="retain" property="retain"></result>
+        <result column="expect" property="expect"></result>
+        <result column="profit" property="profit"></result>
+        <association property="finance" javaType="wallet.bean.Finance">
+            <id column="finid" property="finid"></id>
+            <result column="finame" property="finame"></result>
+            <result column="synopsis" property="synopsis"></result>
+            <result column="business" property="business"></result>
+            <result column="releasetime" property="releasetime"></result>
+            <result column="startmoney" property="startmoney"></result>
+            <result column="cycle" property="cycle"></result>
+            <result column="rate" property="rate"></result>
+            <result column="blurb" property="blurb"></result>
+            <result column="total" property="total"></result>
+            <result column="releasestate" property="releasestate"></result>
+            <result column="warning" property="warning"></result>
+            <result column="photo" property="photo"></result>
+            <result column="slogan" property="slogan"></result>
+            <result column="retain" property="retain"></result>
+        </association>
+    </resultMap>
+
+    <select id="queryFinanceHistoryById" resultMap="FinanceHistory">
+        select * from finance,finance_history where  finance_history.finid=finance.finid and finance_history.uid=#{uid}
+    </select>
+    <insert id="addFinanceHistory" parameterType="wallet.bean.FinanceHistory">
+        insert into finance_history values (fhid,#{finid},#{uid},#{dealtime},#{dealmoney},state,retain,#{expect},#{profit});
+    </insert>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.FinanceDao">
+   <insert id="addFinance">
+       insert into finance values (finid,#{finname},#{synopsis},#{business},
+       #{releasetime},#{startmoney},#{cycle},#{total},#{releasestate},#{warning},
+       #{slogan},#{photo},#{retain},#{rate},#{blurb})
+   </insert>
+
+    <select id="queryAllFinance" resultType="wallet.bean.Finance">
+        select * from finance
+    </select>
+
+    <update id="updateFinance">
+        update finance set releasestate=#{releasestate} where finid=#{finid}
+    </update>
+
+
+    <resultMap id="myfinance" type="wallet.bean.Finance">
+        <id column="finid" property="finid"></id>
+        <result column="finname" property="finname"></result>
+        <result column="synopsis" property="synopsis"></result>
+        <result column="business" property="business"></result>
+        <result column="releasetime" property="releasetime"></result>
+        <result column="startmoney" property="startmoney"></result>
+        <result column="cycle" property="cycle"></result>
+        <result column="rate" property="rate"></result>
+        <result column="blurb" property="blurb"></result>
+        <result column="total" property="total"></result>
+        <result column="releasestate" property="releasestate"></result>
+        <result column="warning" property="warning"></result>
+        <result column="retain" property="retain"></result>
+        <result column="slogan" property="slogan"></result>
+        <result column="photo" property="photo"></result>
+        <collection property="financeHistory" ofType="wallet.bean.FinanceHistory">
+            <id column="fhid" property="fhid"></id>
+            <result column="uid" property="uid"></result>
+            <result column="dealtime" property="dealtime"></result>
+            <result column="dealmoney" property="dealmoney"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="queryFinanceHistoryByid" resultMap="myfinance">
+        SELECT * FROM finance f,finance_history fh
+        where f.finid=fh.finid and fh.uid=#{uid}
+    </select>
+
+    <select id="selectFinByname" resultType="wallet.bean.Finance">
+        select * from finance
+        <where>
+            <if test="finname!=null and finname!=''">
+                finname like '%${finname}%'
+            </if>
+        </where>
+    </select>
+
+    <!--根据利率查询理财产品-->
+    <select id="queryFinancereta" resultType="wallet.bean.Finance">
+        select * from finance order by rate desc limit 4
+    </select>
+
+
+    <!--根据新品查询理财产品-->
+    <select id="queryFinaceByReleasetime" resultType="wallet.bean.Finance">
+        select * from finance order by releasetime desc limit 4
+    </select>
+
+
+    <!--根据热度查询理财产品-->
+    <select id="queryFinanceCycle" resultType="wallet.bean.Finance">
+        select f.* from finance f,
+            (select finid ,count(finid) from finance_history
+            group by finid ORDER BY count(finid) desc limit 4
+            ) s where f.finid=s.finid
+    </select>
+
+
+    <!--模糊查询  首页搜索-->
+    <select id="queryFinanceByName" resultType="wallet.bean.Finance">
+          select * from finance where finname like '%${finname}%'
+          limit #{pageon},4
+    </select>
+    <select id="count" resultType="int">
+        select count(1) from credit where crename like '%${finname}%'
+    </select>
+
+
+    <!--根据周期查利率高的产品-->
+    <select id="queryFinanceRateByCycle" resultType="wallet.bean.Finance">
+        select * from finance where cycle=#{cycle} order by rate desc
+    </select>
+
+    <!--根据id获取理财产品详情-->
+    <select id="queryFinanceById" resultType="wallet.bean.Finance">
+        select * from finance where finid=#{finid}
+    </select>
+
+    <!--修改定期理财总发布金额-->
+    <update id="UpdateFinanceTotal">
+        update finance set total=#{total} where finid=#{finid}
+    </update>
+
+    <select id="queryAllOfFinance" resultType="wallet.bean.Finance">
+        select  * from finance limit 4
+    </select>
+</mapper>

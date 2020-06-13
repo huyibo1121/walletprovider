@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.BankDao">
+
+    <!--添加银行卡信息-->
+   <insert id="addbank">
+       insert into bank values (#{bankid},#{uid})
+   </insert>
+
+    <!--修改银行卡信息-->
+    <update id="updatebank">
+        update bank set bankid=#{bankid} where uid={uid}
+    </update>
+
+    <!--删除银行卡信息-->
+    <delete id="deletebank">
+        delete from bank where bankid=#{bankid}
+    </delete>
+
+    <!--根据uid查询-->
+    <select id="queryBankByUid" resultType="wallet.bean.Bank">
+        select  * from bank where uid=#{uid}
+    </select>
+
+    <!--根据bankid查-->
+    <select id="queryBankByBankid" resultType="wallet.bean.Bank">
+        select * from bank where bankid=#{bankid}
+    </select>
+</mapper>

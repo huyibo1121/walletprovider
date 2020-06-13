@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.AdvertDao">
+
+    <select id="queryAllAdvert" resultType="wallet.bean.Advert">
+        select * from advert
+    </select>
+
+    <update id="addAdvs">
+        update advert set proid=#{proid},protype=#{protype} where  advid=#{advid}
+    </update>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.CreditDao">
+    <insert id="addCredit" useGeneratedKeys="true"  keyProperty="creid">
+        insert into credit values (creid,#{crename},#{synopsis},#{business},
+        #{releasetime},#{repaytype},#{maxcycle},
+        #{photo},#{slogan},state,retain)
+    </insert>
+
+    <select id="queryAllCredit" resultType="wallet.bean.Credit">
+        select * from credit
+    </select>
+
+    <update id="updateCredit">
+        update credit set state=#{state} where creid=#{creid}
+    </update>
+
+    <resultMap id="mycredit" type="wallet.bean.Credit">
+        <id column="creid" property="creid"></id>
+        <result column="crename" property="crename"></result>
+        <result column="synopsis" property="synopsis"></result>
+        <result column="business" property="business"></result>
+        <result column="releasetime" property="releasetime"></result>
+        <result column="repaytype" property="repaytype"></result>
+        <result column="maxcycle" property="maxcycle"></result>
+        <result column="retain" property="retain"></result>
+        <result column="photo" property="photo"></result>
+        <result column="slogan" property="slogan"></result>
+        <result column="state" property="state"></result>
+        <result column="retain" property="retain"></result>
+        <result column="min" property="min"></result>
+        <collection property="creditRatesList" ofType="wallet.bean.CreditRates" javaType="java.util.List">
+            <id column="creid" property="creid"></id>
+            <result column="creid" property="creid"></result>
+            <result column="cycle" property="cycle"></result>
+            <result column="rate" property="rate"></result>
+            <result column="blurb" property="blurb"></result>
+            <result column="retain" property="retain"></result>
+        </collection>
+    </resultMap>
+
+    <select id="queryLoanRate" resultMap="mycredit">
+        select * from credit cre,credit_rates cr
+        where cre.creid=cr.creid
+    </select>
+    
+    <select id="selectLoanByname" resultMap="mycredit">
+      select * from credit cre,credit_rates cr
+        <where>
+            cre.creid=cr.creid and
+            <if test="crename!=null and crename!=''">
+                cre.crename like '%${crename}%'
+            </if>
+        </where>
+    </select>
+
+    <!--根据利率查询贷款产品-->
+    <select id="queryCredit" resultMap="mycredit">
+              SELECT c.*,cr.min from credit c,
+(SELECT *,min(rate) min FROM credit_rates
+GROUP BY creid LIMIT 4
+) cr WHERE c.creid=cr.creid ORDER BY min
+    </select>
+
+    <!--模糊查询  首页搜索-->
+    <select id="queryByCrename" resultType="wallet.bean.Credit">
+         select * from credit where crename like '%${crename}%'
+         limit #{pageon},4
+    </select>
+    <select id="count" resultType="int">
+        select count(1) from credit where crename like '%${crename}%'
+    </select>
+
+    <select id="queryCreditByReleasetime" resultMap="mycredit" >
+        select * from credit c,credit_rates cr
+         where c.creid=cr.creid order by releasetime desc  limit 4
+    </select>
+
+    <!--根据周期获取贷款产品-->
+    <select id="queryCreditByMaxCycle" resultMap="mycredit" >
+        select * from credit c,credit_rates cr
+         where c.creid=cr.creid and cr.cycle=#{cycle} limit 4
+    </select>
+
+    <!--根据额度获取贷款产品-->
+    <select id="queryCreditByQuoTa" resultMap="mycredit">
+        select * from credit c,credit_rates cr
+         where c.creid=cr.creid and c.quota &lt; #{quotaMax} and c.quota &gt; #{quotaMin} LIMIT 4
+    </select>
+
+    <!--根据id获取贷款产品-->
+    <select id="queryCreditByCrid"  resultType="wallet.bean.Credit">
+        select * from  credit where creid=#{creid}
+    </select>
+
+    <select id="queryAllOfCredit" resultMap="mycredit">
+         select * from credit c,credit_rates cr
+         where c.creid=cr.creid limit 4
+    </select>
+</mapper>

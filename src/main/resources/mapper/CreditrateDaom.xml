@@ -1,0 +1,12 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.hyb.walletprovider.dao.CreditrateDao">
+    <insert id="addRate">
+        insert into credit_rates values (#{creid},#{cycle},#{rate},#{blurb},#{retain},crid)
+    </insert>
+
+    <select id="queryCreditRatesByCrid" resultType="wallet.bean.CreditRates">
+        select * from  credit_rates where crid=#{crid}
+    </select>
+</mapper>
